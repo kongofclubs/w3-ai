@@ -3,6 +3,7 @@ import { OpenAIStream, StreamingTextResponse } from 'ai'
 import { Configuration, OpenAIApi } from 'openai-edge'
 
 import { nanoid } from '@/lib/utils'
+import { NextRequest } from 'next/server';
 
 export const runtime = 'edge'
 
@@ -12,9 +13,8 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration)
 
-export default async function handler(req: Request) {
-  const { messages, previewToken, id: chatId} = await req.json()
-  // const userId = (await auth())?.user.id
+export default async function handler(req: NextRequest) {
+  const { messages, previewToken, id: chatId, userId } = await req.json()
 
   // if (!userId) {
   //   return new Response('Unauthorized', {
@@ -42,7 +42,7 @@ export default async function handler(req: Request) {
       const payload = {
         id,
         title,
-        userId: id,
+        userId,
         createdAt,
         path,
         messages: [
@@ -54,7 +54,7 @@ export default async function handler(req: Request) {
         ]
       }
       await kv.hmset(`chat:${id}`, payload)
-      await kv.zadd(`user:chat:${id}`, {
+      await kv.zadd(`user:chat:${userId}`, {
         score: createdAt,
         member: `chat:${id}`
       })
@@ -63,9 +63,3 @@ export default async function handler(req: Request) {
 
   return new StreamingTextResponse(stream)
 }
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};

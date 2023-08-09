@@ -36,81 +36,37 @@ export async function getChat(id: string, userId: string) {
   return chat
 }
 
-export async function removeChat({ id, path }: { id: string; path: string }) {
-  // const session = await auth()
+export async function removeChat({ id, userId }: { id: string; userId: string }) {
+  const uid = await kv.hget<string>(`chat:${id}`, 'userId')
 
-  // if (!session) {
-  //   return {
-  //     error: 'Unauthorized'
-  //   }
-  // }
-
-  // const uid = await kv.hget<string>(`chat:${id}`, 'userId')
-
-  // if (uid !== session?.user?.id) {
-  //   return {
-  //     error: 'Unauthorized'
-  //   }
-  // }
+  if (uid !== userId) {
+    return {
+      error: 'Unauthorized'
+    }
+  }
 
   await kv.del(`chat:${id}`)
-  // await kv.zrem(`user:chat:${session.user.id}`, `chat:${id}`)
-
-  // revalidatePath('/')
-  // return revalidatePath(path)
+  await kv.zrem(`user:chat:${userId}`, `chat:${id}`)
 }
 
-export async function clearChats() {
-  // const session = await auth()
+export async function clearChats(userId: string) {
 
-  // if (!session?.user?.id) {
-  //   return {
-  //     error: 'Unauthorized'
-  //   }
-  // }
-
-  // const chats: string[] = await kv.zrange(`user:chat:${session.user.id}`, 0, -1)
-  // if (!chats.length) {
-  // return redirect('/')
-  // }
-  // const pipeline = kv.pipeline()
-
-  // for (const chat of chats) {
-  //   pipeline.del(chat)
-  //   pipeline.zrem(`user:chat:${session.user.id}`, chat)
-  // }
-
-  // await pipeline.exec()
-
-  // revalidatePath('/')
-  // return redirect('/')
-}
-
-export async function getSharedChat(id: string) {
-  const chat = await kv.hgetall<Chat>(`chat:${id}`)
-
-  if (!chat || !chat.sharePath) {
-    return null
+  if (!userId) {
+    return {
+      error: 'Unauthorized'
+    }
   }
 
-  return chat
-}
+  const chats: string[] = await kv.zrange(`user:chat:${userId}`, 0, -1)
+  if (!chats.length) {
+    return true;
+  }
+  const pipeline = kv.pipeline()
 
-export async function shareChat(chat: Chat) {
-  // const session = await auth()
-
-  // if (!session?.user?.id || session.user.id !== chat.userId) {
-  //   return {
-  //     error: 'Unauthorized'
-  //   }
-  // }
-
-  const payload = {
-    ...chat,
-    sharePath: `/share/${chat.id}`
+  for (const chat of chats) {
+    pipeline.del(chat)
+    pipeline.zrem(`user:chat:${userId}`, chat)
   }
 
-  await kv.hmset(`chat:${chat.id}`, payload)
-
-  return payload
+  await pipeline.exec()
 }

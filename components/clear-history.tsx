@@ -49,18 +49,18 @@ export function ClearHistory({ clearChats }: ClearHistoryProps) {
           <AlertDialogAction
             disabled={isPending}
             onClick={event => {
-              // event.preventDefault()
-              // startTransition(async () => {
-              //   const result = await clearChats()
+              event.preventDefault()
+              startTransition(async () => {
+                const result = await clearChats()
 
-              //   if (result && 'error' in result) {
-              //     toast.error(result.error)
-              //     return
-              //   }
+                if (result && 'error' in result) {
+                  toast.error(result.error)
+                  return
+                }
 
-              //   setOpen(false)
-              //   router.push('/')
-              // })
+                setOpen(false)
+                router.push('/')
+              })
             }}
           >
             {isPending && <IconSpinner className="mr-2 animate-spin" />}
