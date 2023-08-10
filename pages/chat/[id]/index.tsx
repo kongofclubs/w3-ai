@@ -11,7 +11,6 @@ export default function ChatPage() {
   const { query } = useRouter();
   const { user, isLoggedIn, isLoading} = useUser()
   const [chat, setChat] = React.useState<ChatType | null>(null)
-  console.log(query, isLoading)
 
   React.useEffect(() => {
     (async () => {

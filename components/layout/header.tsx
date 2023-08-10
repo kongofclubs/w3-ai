@@ -1,13 +1,11 @@
 import * as React from 'react'
 import Link from 'next/link'
 
-import { Sidebar } from '@/components/sidebar'
-import { SidebarList } from '@/components/sidebar-list'
+import { Sidebar, SidebarList, SidebarFooter } from '@/components/navigation'
 import {
   IconNextChat,
   IconSeparator,
 } from '@/components/ui/icons'
-import { SidebarFooter } from '@/components/sidebar-footer'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { ClearHistory } from '@/components/clear-history'
 import { UserMenu } from '@/components/user-menu'

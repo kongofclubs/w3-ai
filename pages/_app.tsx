@@ -2,7 +2,7 @@ import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 
 import { TailwindIndicator } from '@/components/tailwind-indicator'
-import { AppProviders } from '@/components/providers'
+import { AppProviders } from '@/components/provider'
 import { Layout } from '@/components/layout'
 
 import { fontMono, fontSans } from '@/lib/fonts'

@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { SidebarActions } from '@/components/sidebar-actions'
-import { SidebarItem } from '@/components/sidebar-item'
+import { SidebarActions, SidebarItem } from '@/components/navigation'
 import { Chat } from '@/lib/types'
 
 export interface SidebarListProps {
