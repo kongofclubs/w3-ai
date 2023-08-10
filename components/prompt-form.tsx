@@ -53,7 +53,6 @@ export function PromptForm({
             <button
               onClick={e => {
                 e.preventDefault()
-                router.refresh()
                 router.push('/')
               }}
               className={cn(
