@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { useChat, type Message } from 'ai/react'
-import { useUser } from '@thirdweb-dev/react'
+import { useUser, useTokenBalance, useContract } from '@thirdweb-dev/react'
+import { BigNumber } from 'ethers'
+import { toast } from 'react-hot-toast'
 
 import { cn } from '@/lib/utils'
 import { ChatList } from '@/components/chat-list'
@@ -19,7 +21,8 @@ import {
 import { useState } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import { toast } from 'react-hot-toast'
+import { RequireSigninScreen } from './require-signin-screen'
+import { CheckTokenAmountScreen } from './check-token-amount-screen'
 
 const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
 
@@ -29,7 +32,9 @@ export interface ChatProps extends React.ComponentProps<'div'> {
 }
 
 export function Chat({ id, initialMessages, className }: ChatProps) {
-  const { user } = useUser();
+  const { user, isLoggedIn } = useUser();
+  const { contract } = useContract(process.env.NEXT_PUBLIC_RAYN_TOKEN_ADDRESS, "token");
+  const { data, isLoading: isCheckingToken } = useTokenBalance(contract, user?.address);
   const [previewToken, setPreviewToken] = useLocalStorage<string | null>(
     'ai-token',
     null
@@ -51,6 +56,15 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         }
       }
     })
+
+  if (!isLoggedIn) {
+    return <RequireSigninScreen />
+  }
+
+  if (isCheckingToken || data && data.value.lt(BigNumber.from(1000000))) {
+    return <CheckTokenAmountScreen />
+  }
+
   return (
     <>
       <div className={cn('pb-[200px] pt-4 md:pt-10', className)}>
