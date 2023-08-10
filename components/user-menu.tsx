@@ -27,8 +27,8 @@ export function UserMenu({ user }: UserMenuProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent sideOffset={8} align="start" className="w-[180px]">
           <DropdownMenuItem className="flex-col items-start">
-            <div className="text-xs font-medium text-ellipsis overflow-hidden">{user.address}</div>
-            <div className="text-xs text-zinc-500 text-ellipsis overflow-hidden">{user.address}</div>
+            <div className="w-full text-xs font-medium text-ellipsis overflow-hidden">{user.address}</div>
+            <div className="w-full text-xs text-zinc-500 text-ellipsis overflow-hidden">{user.address}</div>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
