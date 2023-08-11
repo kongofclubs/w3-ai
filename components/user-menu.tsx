@@ -1,4 +1,4 @@
-import { UserWithData, useLogout } from '@thirdweb-dev/react'
+import { UserWithData, useLogout, useDisconnect } from '@thirdweb-dev/react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -16,6 +16,7 @@ export interface UserMenuProps {
 
 export function UserMenu({ user }: UserMenuProps) {
   const { logout } = useLogout()
+  const disconnect = useDisconnect();
 
   return (
     <div className="flex items-center justify-between">
@@ -43,8 +44,10 @@ export function UserMenu({ user }: UserMenuProps) {
             </a>
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => {logout()}
-            }
+            onClick={() => {
+              logout()
+              disconnect()
+            }}
             className="text-xs"
           >
             Log Out

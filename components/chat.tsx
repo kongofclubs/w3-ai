@@ -22,7 +22,7 @@ import { useState } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { RequireSigninScreen } from './require-signin-screen'
-import { CheckTokenAmountScreen } from './check-token-amount-screen'
+import { VeryRaynHoldingsScreen } from './verify-rayn-holdings-screen'
 
 const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
 
@@ -62,7 +62,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   }
 
   if (isCheckingToken || data && data.value.lt(BigNumber.from(1000000))) {
-    return <CheckTokenAmountScreen />
+    return <VeryRaynHoldingsScreen isLoading={isCheckingToken} />
   }
 
   return (
